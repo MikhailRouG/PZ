@@ -1,19 +1,20 @@
+using System;
 using UnityEngine;
 
-public class TurretConroller : MonoBehaviour , IShootable
+public class TurretConroller : MonoBehaviour, IShootable
 {
     [SerializeField] private Transform _gun;
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private Transform _bulletStartPosition;
     [SerializeField] private float _timeToShoot;
     private float _currentShootTime;
-    private EnemyDetect _enemyDetect;
+    private DetectEnemy _detectEnemy;
     private IMovable _movable;
 
     private Transform _enemePosition;
     private void Start()
     {
-        _enemyDetect = GetComponentInChildren<EnemyDetect>();
+        _detectEnemy = GetComponentInChildren<DetectEnemy>();
         _movable = GetComponent<IMovable>();
     }
 
@@ -24,8 +25,8 @@ public class TurretConroller : MonoBehaviour , IShootable
 
     private void Rotate()
     {
-        Transform enemy = _enemyDetect.Enemy();
-        if (enemy == null || _movable.MovementSatus())
+        Transform enemy = _detectEnemy.Enemy();
+        if (enemy == null)
         {
             _gun.rotation = Quaternion.identity;
             return;

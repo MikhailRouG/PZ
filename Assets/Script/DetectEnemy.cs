@@ -2,27 +2,20 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class EnemyDetect : MonoBehaviour
+public class DetectEnemy : MonoBehaviour
 {
-    [SerializeField] private LayerMask _layerMask;
-    private List<Health> _enemys;
-
-    private void Start()
-    {
-        _enemys = new List<Health>();
-    }
-
+    private List<Transform> _enemys = new();
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<Health>(out Health health))
+        if (other.TryGetComponent<IEnemy>(out IEnemy enemy))
         {
-            _enemys.Add(health);
+            _enemys.Add(other.gameObject.transform);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.TryGetComponent<Health>(out Health health)) _enemys.Remove(health);
+        if(other.TryGetComponent<IEnemy>(out IEnemy enemy)) _enemys.Remove(other.gameObject.transform);
     }
 
     public Transform Enemy()
@@ -33,6 +26,6 @@ public class EnemyDetect : MonoBehaviour
             _enemys.Remove(_enemys[0]);
             return null;
         }
-        return _enemys[0].transform;
+        return _enemys[0];
     }
 }

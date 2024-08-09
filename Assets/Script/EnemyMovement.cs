@@ -1,25 +1,33 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class EnemyMovement : MonoBehaviour
+[SelectionBase]
+public class EnemyMovement : MonoBehaviour, IEnemy
 {
-    private Vector3 _base;
+    [SerializeField] private EnemyDectect _detect;
+    private Vector3 _target ;
     [SerializeField] private Rigidbody _rigidbody;
     [SerializeField] private float _speed;
 
     private void OnValidate()
     {
         _rigidbody ??= GetComponent<Rigidbody>();
+        _detect ??= GetComponentInChildren<EnemyDectect>();
     }
 
     private void Start()
     {
-        _base = FindObjectOfType<Base>().transform.position;
-        transform.rotation = Quaternion.LookRotation(-transform.position - _base);
+        _target = Vector3.zero;
+        transform.rotation = Quaternion.LookRotation(-transform.position - _target);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        _rigidbody.MovePosition(transform.position + transform.forward * Time.deltaTime * _speed);
+        //_rigidbody.MovePosition(transform.position + transform.forward * _speed);
+    }
+
+    public void ChangeTarget()
+    {
+        transform.rotation = Quaternion.LookRotation(-transform.position - _target);
     }
 }
